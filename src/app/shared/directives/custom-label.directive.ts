@@ -5,7 +5,7 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
 })
 export class CustomLabelDirective implements OnInit {
 
-  private htmlElement?: ElementRef<HTMLElement>;
+  private htmlElement?: ElementRef<HTMLElement>; 
 
   constructor( private el: ElementRef<HTMLElement> ) {
     // console.log('constructor de la directiva');
