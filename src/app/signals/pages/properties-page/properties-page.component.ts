@@ -1,11 +1,13 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, effect, signal } from '@angular/core';
 import { User } from '../../interfaces/user-request.interface';
 
 @Component({
   templateUrl: './properties-page.component.html',
   styleUrls: ['./properties-page.component.css']
 })
-export class PropertiesPageComponent {
+export class PropertiesPageComponent implements OnDestroy, OnInit {
+
+  public counterButton = signal(10);
 
   public user = signal<User>({
     "id": 2,
@@ -16,6 +18,29 @@ export class PropertiesPageComponent {
   });
 
   public fullName = computed( () =>  `${ this.user()?.first_name } ${ this.user()?.last_name }`)
+
+  public userChangedEffect = effect( () => {
+    console.log(`${ this.user().first_name } - ${ this.counterButton() }`);
+    
+  });
+
+  ngOnInit(): void { //mostrar limpieza automática del efecto, sin emitir valores cuando estás en otra ventana
+    setInterval(() => {
+      this.counterButton.update( current => current + 1 )
+
+      //*para que nuestro efecto se pare en un numero de segundos determinado (15)
+      //if ( this.counterButton() == 15 )
+      //  this.userChangedEffect.destroy();
+    },1000)
+  }
+
+  ngOnDestroy(): void {
+    // this.userChangedEffect.destroy();
+  }
+
+  increaseBy(value: number) {
+    this.counterButton.update( current => current + value )
+  }
 
   onFieldUpdated( field: keyof User, value: string ){
   
